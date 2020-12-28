@@ -1,0 +1,27 @@
+.iti
+{
+    display: block;
+}
+
+.hide
+{
+    display: none;
+}
+
+#valid-msg
+{
+    color: green;
+    margin: 4px 0;
+}
+
+#error-msg
+{
+    color: red;
+    margin: 4px 0;
+}
+
+.error_msg
+{
+    color: #F90A0A;
+    font-size: 0.8rem;
+}
