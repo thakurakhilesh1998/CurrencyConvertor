@@ -345,8 +345,8 @@
     <script src="assets/js/international dial/intlTelInput.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script>
-         let phone_error=false;
-        var phone=document.querySelector('#telephone'),
+            let phone_error=false;
+            var phone=document.querySelector('#telephone'),
             errorMsg = document.querySelector("#error-msg"),
             validMsg = document.querySelector("#valid-msg");
             var errorMap = [ "Invalid number", "Invalid country code", "Too short", "Too long", "Invalid number"];

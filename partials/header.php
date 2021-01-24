@@ -12,7 +12,7 @@
                     <a class="nav-link" href="#">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="process/logout.php">User LogOut</a>
+                    <a class="nav-link" href="../process/logout.php">User LogOut</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="user/index.php">User Dashboard</a>
@@ -36,9 +36,6 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="user-register.php">Register Here</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
                 </li>
             </ul>
         </div>

@@ -274,5 +274,129 @@
                 return true;
             }
         }
+
+        public function updateUserDetails($id,$value,$key)
+        {
+            $value=$this->db_connection->real_escape_string($value);
+            $sql="UPDATE user SET $key='$value' WHERE u_id='$id'";
+            $status=$this->db_connection->prepare($sql);
+            try 
+            {
+                if($status->execute())
+                {
+                    if($key=='u_address' || $key=='u_city' || $key=='u_zip' ||$key=='u_country' ||$key=='u_state')
+                    {
+                        $this->updateStatus($id);
+                    }
+                    $_SESSION['user'][$key]=$value;
+                    $status->close();
+                    return true;
+                }
+                else
+                {
+                    $status->close();
+                    return false;
+                }
+            }
+            catch(Exception $e)
+            {
+                $status->close();
+                return false;
+            }
+        }
+
+        public function updateVkey($id,$key)
+        {
+            $sql="UPDATE user SET vkey='$key' WHERE u_id='$id'";
+            $status=$this->db_connection->prepare($sql);
+            try
+            {
+                if($status->execute())
+                {
+                    $status->close();
+                    return true;
+                }
+                else
+                {
+                    $status->close();
+                    return false;
+                }
+            }
+            catch (Exception $e)
+            {
+                $status->close();
+                return false;
+            }
+        }
+        public function updateIsVerify($id)
+        {
+            $sql="UPDATE user SET u_is_verify=0 WHERE u_id='$id'";
+            $status=$this->db_connection->prepare($sql);
+            try
+            {
+                if($status->execute())
+                {
+                    $status->close();
+                    return true;
+                }
+                else
+                {
+                    $status->close();
+                    return false;
+                }
+            }
+            catch (Exception $e)
+            {
+                $status->close();
+                return false;
+            }
+        }
+        public function updateEmail($id,$value)
+        {
+            $value=$this->db_connection->real_escape_string($value);
+            $sql="UPDATE user SET u_email='$value' WHERE u_id='$id'";
+            $status=$this->db_connection->prepare($sql);
+            $key=md5(time().$value);
+            $isvkey=$this->updateVkey($id,$key);
+            if($isvkey)
+            {
+                try
+                {
+                    if($status->execute())
+                    {
+                        $_SESSION['u_email']=$value;
+                        $to=$value;
+                        $subject="Email verification form Currency Exchage";
+                        $message="Hi,<br>Update your email on Currency converter<br>Verify now and enjoy full features<br><a href='http://localhost/Currency Exchange/verify.php?vkey=$key'>Verify Email</a>";
+                        $headers="From:thakurakhilesh20@gmail.com \r\n";
+                        $headers.="MIME-Version:1.0"."\r\n";
+                        $headers.="Content-type:text/html;charset-UTF-8"."\r\n";
+                        mail($to,$subject,$message,$headers);
+                        if($this->updateIsVerify($id))
+                        {
+                            echo "<script>alert('Email updated Successfully!!Verify your new email and then login again. Thannk you')</script>";
+                            unset($_SESSION['user']);
+                            header("Location:../user_login.php");
+
+                        }
+                        else
+                        {
+                            return false;
+                        }
+                        $status->close();   
+                    }
+                    else
+                    {
+                        $status->close();
+                        return false;
+                    }
+                }
+                catch(Exception $e)
+                {
+                    $status->close();
+                    return false;
+                }
+            }
+        }
     }
 ?>
