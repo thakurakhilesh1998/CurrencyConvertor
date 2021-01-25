@@ -288,6 +288,12 @@
                     {
                         $this->updateStatus($id);
                     }
+                    if($key=='u_pass')
+                    {
+                        header("Location:../user_login.php");
+                        unset($_SESSION['user']);
+                        die();
+                    }
                     $_SESSION['user'][$key]=$value;
                     $status->close();
                     return true;

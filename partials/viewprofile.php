@@ -48,10 +48,18 @@ if (isset($_POST['uemail'])) {
 
 if (isset($_POST['uphone'])) {
     if (isset($_POST['phone'])) {
-        print_r($_POST['phone']);
+        if ($_POST['phone'] != null) {
+            $contact = $_POST['phone'];
+            $updateUser = new CurrencyExchange();
+            $isUpdate = $updateUser->updateUserDetails($id, $contact, 'u_phone');
+            if ($isUpdate) {
+                echo "<script>alert('Phone number updated successfully!!')</script>";
+            } else {
+                echo "<script>alert('Error while updating phone number!!! This phone number may be used by some other user')</script>";
+            }
+        }
     }
 }
-
 if (isset($_POST['uaddress'])) {
     if (isset($_POST['address'])) {
         if ($_POST['address'] != null) {
@@ -61,7 +69,7 @@ if (isset($_POST['uaddress'])) {
             if ($isUpdate) {
                 echo "<script>alert('Address updated successfully!!')</script>";
             } else {
-                echo "<script>alert('Error while updating address!!! This address may be used by some other user')</script>";
+                echo "<script>alert('Error while updating address!!!')</script>";
             }
         }
     }
@@ -130,6 +138,27 @@ if(isset($_POST['ustate']))
         }
     }
 }
+if(isset($_POST['upass']))
+{
+    if(isset($_POST['pass']))
+    {
+        if($_POST['pass']!=null)
+        {
+            $pass=$_POST['pass'];
+            $pass=md5($pass);
+            $updateUser=new CurrencyExchange();
+            $isUpdate=$updateUser->updateUserDetails($id,$pass,'u_pass');
+            if($isUpdate)
+            {
+                echo "<script>alert('Password updated successfully!!')</script>"; 
+            }
+            else
+            {
+                echo "<script>alert('Error while updating Password!!')</script>"; 
+            }
+        }
+    }
+}
 ?>
 <table class="table table-bordered w-50 my-4" style="margin: 0 auto;">
     <tbody>
@@ -153,15 +182,28 @@ if(isset($_POST['ustate']))
             </form>
         </tr>
         <tr>
-            <form id="phonef" action="" method="POST">
-                <td>Contact No</td>
+        <tr>
+            <form id="passwordf" action="" method="POST">
+                <td>Password</td>
                 <td>
-                    <input type="tel" value='<?php echo $phone; ?>' class="form-control" placeholder="Contact No" name="phone" id="telephone"><br>
+                    <input type="password" placeholder="New Password" class="form-control" name="pass" id="pass">
+                    <span id="pass_error_msg" class="error_msg"></span>
+                </td>
+                <td><input type="submit" value="Update" name="upass" id="upass" class="btn btn-success"></td>
+            </form>
+        </tr>
+        <tr>
+            <form id="phonef" action="" method="POST">
+                <td>Phone</td>
+                <td>
+                    <input type="tel" placeholder="" id="telephone" class="form-control" name="phone" value="<?php echo $phone?>"><br>
                     <span class="hide" id="valid-msg">✓ Valid</span>
                     <span class="hide" id="error-msg"></span>
                     <span id="phone_error_msg" class="error_msg"></span>
                 </td>
-                <td><input type="submit" value="Update" name="uphone" id="uphone" class="btn btn-success"></td>
+                <td>
+                    <input type="submit" value="Update" name="uphone" id="uphone" class="btn btn-success">
+                </td>
             </form>
         </tr>
         <tr>
@@ -524,6 +566,7 @@ if(isset($_POST['ustate']))
         let zip_error = false;
         let country_error = false;
         let state_error=false;
+        let pass_error=false;
         $('#name').change(function() {
             checkName();
         });
@@ -549,7 +592,10 @@ if(isset($_POST['ustate']))
         });
         $('#state').change(function () {
             checkState();
-        })
+        });
+        $('#pass').change(function () {
+           checkPass(); 
+        });
 
         function checkName() {
             var pattern = /^[a-zA-Z ]*$/;
@@ -671,6 +717,24 @@ if(isset($_POST['ustate']))
                 state_error = true;
            }  
         }
+
+        function checkPass() {
+            let pattern=/^.*(?=.{8,})(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%&]).*$/;
+            let pass=$('#pass').val();
+            let passlenght=$('#pass').val().length;
+            if(pattern.test(pass) && pass!='' && passlenght>=8)
+            {
+                $('#pass_error_msg').hide();
+                $('#pass').css("border-bottom","2px solid #34F458"); 
+            }
+            else
+            {
+                $("#pass_error_msg").html("<ul><li>Must be at least 8 characters</li><li>At least 1 number, 1 lowercase, 1 uppercase letter</li><li>At least 1 special character from @#$%&</li></ul>");
+                $('#pass_error_msg').show();
+                $("#pass").css("border-bottom","2px solid #F90A0A");
+                pass_error = true;
+            }
+        }
         $('#namef').submit(function() {
             u_name_error = false;
             checkName();
@@ -752,6 +816,19 @@ if(isset($_POST['ustate']))
             else
             {
                 alert("State is not valid");
+                return false;
+            }
+        });
+        $('#passwordf').submit(function () {
+            pass_error=false;
+            checkPass();
+            if(pass_error===false)
+            {
+                return true;
+            }
+            else
+            {
+                alert("Password is not valid");
                 return false;
             }
         })
